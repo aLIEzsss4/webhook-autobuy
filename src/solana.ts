@@ -43,8 +43,8 @@ export default class SolanaSwapService {
   constructor() {
     this.connection = new Connection(process.env.SOLANA_RPC_URL!, "confirmed");
     this.wallet = getKeypairFromEnvironment("SOLANA_PRIVATE_KEY");
-    this.tipAmount = 0.0005 * LAMPORTS_PER_SOL;
-    this.isJitoTipEnabled = true;
+    this.isJitoTipEnabled = process.env.JITO_ENABLED === 'true';
+    this.tipAmount = (Number(process.env.TIP_AMOUNT) || 0.0005) * LAMPORTS_PER_SOL;
     this.FEE_WALLET = new PublicKey(process.env.FEE_ADDRESS!);
     this.jitoConnection = new Connection(
       "https://tokyo.mainnet.block-engine.jito.wtf",
