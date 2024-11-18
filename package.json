@@ -5,8 +5,14 @@
     "deploy": "wrangler deploy --minify"
   },
   "dependencies": {
+    "@jup-ag/api": "^6.0.30",
+    "@solana-developers/helpers": "^2.5.6",
+    "@solana/web3.js": "^1.95.4",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.5",
     "hono": "^4.6.10",
-    "viem": "^2.21.45"
+    "node-fetch": "^3.3.2",
+    "viem": "^2.21.47"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241022.0",

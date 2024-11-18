@@ -2,10 +2,13 @@ name = "my-app"
 main = "src/index.ts"
 compatibility_date = "2024-11-15"
 
-# compatibility_flags = [ "nodejs_compat" ]
+[vars]
+RPC_URL = "https://YOUR_RPC_URL"
+BLOCK_ENGINE_URL = "mainnet.block-engine.jito.wtf"
+AUTH_KEYPAIR_PATH = "YOUR_AUTH_KEYPAIR.json"
+BUNDLE_TRANSACTION_LIMIT = "5"
 
-# [vars]
-# MY_VAR = "my-variable"
+# compatibility_flags = [ "nodejs_compat" ]
 
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
