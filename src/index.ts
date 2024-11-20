@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import * as chains from "viem/chains";
 import { handleEVMTransaction } from "./evm";
-import SolanaSwapService from "./solana";
+import { createSolanaService } from "./solana";
 
 const app = new Hono();
 
@@ -65,14 +65,12 @@ app.post("/webhook", async (c) => {
       if (chain === "solana") {
         console.log("Solana transaction");
 
-        const swapService = new SolanaSwapService();
+        const swapService = createSolanaService();
 
-        const result = await swapService.handleSwap({
+        const result = await swapService.swap({
           inputMint: "So11111111111111111111111111111111111111112", // SOL
           outputMint: "9PR7nCP9DpcUotnDPVLUBUZKu5WAYkwrCUx9wDnSpump", // BAN
           amount: 0.001,
-          amountDecimal: 9,
-          maxAutoSlippageBps: 100,
         });
 
         return c.json({
