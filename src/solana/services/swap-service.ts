@@ -10,8 +10,9 @@ import { createBundleService } from "./bundle-service";
 import { createQuoteService } from "./quote-service";
 import { getKeypairFromEnvironment } from "@solana-developers/helpers";
 import bs58 from "bs58";
+import { Env } from "../../types/env";
 
-export const createSwapService = (config: SolanaConfig) => {
+export const createSwapService = (config: SolanaConfig, env: Env) => {
   // Initialize base connections and wallet
   const connection = new Connection(config.rpcUrl, "confirmed");
   const wallet = getKeypairFromEnvironment("SOLANA_PRIVATE_KEY");
@@ -21,6 +22,7 @@ export const createSwapService = (config: SolanaConfig) => {
     "confirmed"
   );
 
+  const quoteService = createQuoteService(env);
   // Initialize sub-services
   const bundleService = createBundleService(jitoConnection);
   const transactionService = createTransactionService(
@@ -28,7 +30,6 @@ export const createSwapService = (config: SolanaConfig) => {
     wallet,
     bundleService
   );
-  const quoteService = createQuoteService();
 
   const SOL_MINT = "So11111111111111111111111111111111111111112";
 

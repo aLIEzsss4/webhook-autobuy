@@ -2,13 +2,15 @@ import { Hono } from "hono";
 import * as chains from "viem/chains";
 import { handleEVMTransaction } from "./evm";
 import { createSolanaService } from "./solana";
+import { verifyWebhookSignature } from "./utils/utils";
 
 const app = new Hono();
 
 export interface Token {
-  address: string;
-  chain: string;
-  name: string;
+  inputMint?: string;
+  outputMint: string;
+  amount: number;
+  chain?: string;
 }
 
 interface WebhookPayload {
@@ -45,32 +47,30 @@ app.get("/", (c) => {
 
 app.post("/webhook", async (c) => {
   try {
-    const payload: WebhookPayload = await c.req.json();
-
-    if (c.req.header("X-API-KEY") !== "1234567890") {
+    if (
+      !verifyWebhookSignature(
+        c.req.raw,
+        c.req.header("X-Signature"),
+        c.env.WEBHOOK_SECRET
+      )
+    ) {
       return c.json({ error: "Unauthorized" }, 401);
     }
 
+    const payload: WebhookPayload = await c.req.json();
+
     for (const token of payload.tokens) {
-      let { address, chain, name } = token;
-
-      if (!token.chain) {
-        return c.json({ error: "Chain is required" }, 400);
-      }
-
-      if (token.name && !token.address) {
-        address = await queryAddressBySymbol(token);
-      }
+      let { inputMint, outputMint, amount, chain } = token;
 
       if (chain === "solana") {
         console.log("Solana transaction");
 
-        const swapService = createSolanaService();
+        const swapService = createSolanaService(c.env);
 
         const result = await swapService.swap({
-          inputMint: "So11111111111111111111111111111111111111112", // SOL
-          outputMint: "9PR7nCP9DpcUotnDPVLUBUZKu5WAYkwrCUx9wDnSpump", // BAN
-          amount: 0.001,
+          inputMint: inputMint || "So11111111111111111111111111111111111111112", // SOL
+          outputMint: outputMint,
+          amount: amount,
         });
 
         return c.json({
@@ -133,4 +133,6 @@ async function queryAddressBySymbol(token: Token) {
   }
 }
 
-export default app;
+export default {
+  fetch: app.fetch,
+};

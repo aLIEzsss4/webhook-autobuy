@@ -5,16 +5,25 @@ import { SolanaConfig, SwapParams, SwapResult } from "./types";
 // Re-export types
 export * from "./types";
 
+interface Env {
+  SOLANA_RPC_URL?: string;
+  SOLANA_PRIVATE_KEY?: string;
+  JITO_ENABLED?: string;
+  TIP_AMOUNT?: string;
+  FEE_ADDRESS?: string;
+  FEE_PERCENTAGE?: string;
+}
+
 // Create and configure the Solana service
-export const createSolanaService = () => {
+export const createSolanaService = (env: Env) => {
   // Default configuration
   const config: SolanaConfig = {
-    rpcUrl: process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com",
-    privateKey: process.env.SOLANA_PRIVATE_KEY || "",
-    jitoEnabled: process.env.JITO_ENABLED === "true",
-    tipAmount: (Number(process.env.TIP_AMOUNT) || 0.0005) * LAMPORTS_PER_SOL,
-    feeAddress: process.env.FEE_ADDRESS || "",
-    feePercentage: Number(process.env.FEE_PERCENTAGE) || 0.01,
+    rpcUrl: env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com",
+    privateKey: env.SOLANA_PRIVATE_KEY || "",
+    jitoEnabled: env.JITO_ENABLED === "true",
+    tipAmount: (Number(env.TIP_AMOUNT) || 0.0005) * LAMPORTS_PER_SOL,
+    feeAddress: env.FEE_ADDRESS || "",
+    feePercentage: Number(env.FEE_PERCENTAGE) || 0.01,
   };
 
   

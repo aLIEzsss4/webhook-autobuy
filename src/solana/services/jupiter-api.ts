@@ -30,9 +30,9 @@ export interface JupiterTokenMetadata {
   tags: string[];
 }
 
-const proxyUrl = process.env.PROXY_URL;
+export const createJupiterApi = (env: { PROXY_URL?: string }) => {
+  const proxyUrl = env.PROXY_URL;
 
-export const createJupiterApi = () => {
   const jupiterApi = createJupiterApiClient();
 
   const getTokenPricesInUsdc = async (tokenIds: string[]) => {
@@ -74,6 +74,7 @@ export const createJupiterApi = () => {
 
   const swapPost = async (request: SwapPostRequest) => {
     return await jupiterApi.swapPost(request);
+    
   };
 
   const instructionsSwapPost = async (request: SwapPostRequest) => {
@@ -159,6 +160,4 @@ export const createJupiterApi = () => {
   };
 };
 
-const jupiterApi = createJupiterApi();
-
-export default jupiterApi;
+export default createJupiterApi;

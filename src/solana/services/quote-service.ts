@@ -1,9 +1,11 @@
-
 import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import jupiterApi from "./jupiter-api";
+import { createJupiterApi } from "./jupiter-api";
 import { QuoteParams } from "../types";
+import { Env } from "../../types/env";
 
-export const createQuoteService = () => {
+export const createQuoteService = (env: Env) => {
+  const jupiterApi = createJupiterApi(env);
+
   const getQuote = async ({
     inputMint,
     outputMint,
@@ -20,7 +22,10 @@ export const createQuoteService = () => {
           ? maxAutoSlippageBps * 100
           : undefined,
       });
-      console.log("quote", quote);
+
+      if (env.LOG_LEVEL === 'debug') {
+        console.log("quote", quote);
+      }
 
       if (!quote) throw new Error("No quote available");
       return quote;
@@ -39,7 +44,7 @@ export const createQuoteService = () => {
           quoteResponse: quote,
           userPublicKey: userPublicKey.toBase58(),
           dynamicComputeUnitLimit: true,
-          prioritizationFeeLamports: 0.0005 * LAMPORTS_PER_SOL,
+          prioritizationFeeLamports: Number(env.TIP_AMOUNT) * LAMPORTS_PER_SOL,
         },
       });
 
