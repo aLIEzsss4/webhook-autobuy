@@ -11,17 +11,17 @@ describe("test_raydium_swap", async () => {
       privateKey: process.env.SOLANA_PRIVATE_KEY!,
       jitoEnabled: false,
       tipAmount: 0,
-      feeAddress: "",
-      feePercentage: 0
+      feeAddress: process.env.FEE_ADDRESS!,
+      feePercentage: parseFloat(process.env.FEE_PERCENTAGE!),
     };
-    
+
     const payload = {
       inputMint: "So11111111111111111111111111111111111111112",
       outputMint: "AkukwSXUTkDSeh2c1ypyvN4unzyr4xb2T4SmKkix6bT8",
       amount: 0.0001,
-      maxSlippage: 0.5,
+      maxSlippage: 10,
     };
-    
+
     try {
       const txHash = await raydiumSwap(config, payload);
       console.log("Swap transaction hash:", txHash);
@@ -30,5 +30,5 @@ describe("test_raydium_swap", async () => {
       console.error("Test failed:", error);
       throw error;
     }
-  });
-}, 50000);
+  }, 50000);
+});
