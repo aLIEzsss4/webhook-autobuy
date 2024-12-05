@@ -35,3 +35,10 @@ export interface SwapResult {
   quote: any;
   walletAddress: string;
 }
+
+export interface RaydiumTradePayload {
+  inputMint: string;
+  outputMint: string;
+  amount: number;
+  maxSlippage: number;
+}

@@ -1,17 +1,17 @@
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { createSwapService } from "./services/swap-service";
 import { SolanaConfig, SwapParams, SwapResult } from "./types";
+import { Env } from "../types/env";
+import { raydiumSwap } from "./raydium-swap";
 
 // Re-export types
 export * from "./types";
 
-interface Env {
-  SOLANA_RPC_URL?: string;
-  SOLANA_PRIVATE_KEY?: string;
-  JITO_ENABLED?: string;
-  TIP_AMOUNT?: string;
-  FEE_ADDRESS?: string;
-  FEE_PERCENTAGE?: string;
+export interface RaydiumTradePayload {
+  inputMint: string;
+  outputMint: string;
+  amount: number;
+  maxSlippage: number;
 }
 
 // Create and configure the Solana service
@@ -26,14 +26,13 @@ export const createSolanaService = (env: Env) => {
     feePercentage: Number(env.FEE_PERCENTAGE) || 0.01,
   };
 
-  
   // Validate required configuration
   if (!config.privateKey) {
     throw new Error("Private key is required");
   }
 
   // Create the swap service
-  const swapService = createSwapService(config);
+  const swapService = createSwapService(config, env as Env);
 
   // Return public interface
   return {
@@ -41,3 +40,4 @@ export const createSolanaService = (env: Env) => {
   };
 };
 
+export { raydiumSwap };

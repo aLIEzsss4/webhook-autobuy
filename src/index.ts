@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import * as chains from "viem/chains";
 import { handleEVMTransaction } from "./evm";
-import { createSolanaService } from "./solana";
+import { createSolanaService, RaydiumTradePayload } from "./solana";
 import { verifyWebhookSignature } from "./utils/utils";
 
 const app = new Hono();
@@ -43,6 +43,14 @@ interface TradingPayload {
 
 app.get("/", (c) => {
   return c.text("Trading Bot is running!");
+});
+
+app.post("/raydiumTrade", async (c) => {
+  const payload: RaydiumTradePayload = await c.req.json();
+
+  console.log(payload);
+
+  return c.json({ status: "success" });
 });
 
 app.post("/webhook", async (c) => {
