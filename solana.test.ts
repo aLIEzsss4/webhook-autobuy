@@ -1,19 +1,34 @@
 import { expect, test, describe } from "bun:test";
-import { createSolanaService } from "./src/solana";
+import { createSolanaService, raydiumSwap } from "./src/solana";
+import dotenv from "dotenv";
 
-describe("test_solana", () => {
-  test("test_solana_swap", async () => {
-    const swapService = createSolanaService();
+dotenv.config();
 
-    const result = await swapService.swap({
-      inputMint: "So11111111111111111111111111111111111111112", // SOL
-      outputMint: "9PR7nCP9DpcUotnDPVLUBUZKu5WAYkwrCUx9wDnSpump", // BAN
-      amount: 0.001,
-    });
-
-    console.log("Swap completed!");
-    console.log("Transaction signature:", result);
-
-    expect(result).toBe(200);
-  }, 60000);
-});
+describe("test_raydium_swap", async () => {
+  test("test_raydium_swap", async () => {
+    const config = {
+      rpcUrl: process.env.SOLANA_RPC_URL!,
+      privateKey: process.env.SOLANA_PRIVATE_KEY!,
+      jitoEnabled: false,
+      tipAmount: 0,
+      feeAddress: "",
+      feePercentage: 0
+    };
+    
+    const payload = {
+      inputMint: "So11111111111111111111111111111111111111112",
+      outputMint: "AkukwSXUTkDSeh2c1ypyvN4unzyr4xb2T4SmKkix6bT8",
+      amount: 0.0001,
+      maxSlippage: 0.5,
+    };
+    
+    try {
+      const txHash = await raydiumSwap(config, payload);
+      console.log("Swap transaction hash:", txHash);
+      expect(txHash).toBeTruthy();
+    } catch (error) {
+      console.error("Test failed:", error);
+      throw error;
+    }
+  });
+}, 50000);

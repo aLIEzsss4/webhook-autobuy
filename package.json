@@ -2,12 +2,15 @@
   "name": "my-app",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "deploy": "wrangler deploy --minify",
+    "test:raydium": "bun test solana.test.ts"
   },
   "dependencies": {
     "@jup-ag/api": "^6.0.30",
+    "@raydium-io/raydium-sdk-v2": "^0.1.92-alpha",
     "@solana-developers/helpers": "^2.5.6",
     "@solana/web3.js": "^1.95.4",
+    "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
     "dotenv": "^16.4.5",
     "hono": "^4.6.10",
@@ -17,5 +20,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241022.0",
     "wrangler": "^3.83.0"
+  },
+  "dependencies": {
+    "@types/bn.js": "^5.1.0"
   }
 }
